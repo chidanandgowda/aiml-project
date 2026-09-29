@@ -4,7 +4,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start:ml": "..\\ml\\.venv\\Scripts\\python.exe ..\\ml\\serve_model.py",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

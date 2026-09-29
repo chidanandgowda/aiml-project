@@ -21,6 +21,8 @@ Kamai closes that gap with two production components:
 
 A third component, added post-launch, is a **personalised hour-of-day earnings model** that replaces static time-slot multipliers with a rider's own historical effective rate once enough tagged earnings entries exist.
 
+The repository now also contains a reproducible **AI Opportunity Recommender**. A supervised delivery-time regression model is trained on India-focused delivery records, then combined with Kamai's transparent deduction chain, fuel assumptions, wage benchmark, and scarcity score to estimate net hourly earnings without pretending that formula-based outputs are separate trained models.
+
 ## Features
 
 - Legally grounded deduction chain: commission, GST, TDS (Sec 194C), platform fee, fuel — kept as separate, non-inflated line items
@@ -32,6 +34,8 @@ A third component, added post-launch, is a **personalised hour-of-day earnings m
 - Personalised hour-of-day earnings model (replaces static slot multipliers once a rider has ≥3 tagged entries per slot)
 - Earnings ranking + "loyalty penalty" — ₹ left on the table by not switching platforms
 - Privacy-first: on-device-first computation, anonymous check-ins, one-tap deletion
+- Trained delivery-time model with an interactive opportunity and fair-wage demo
+- Reproducible dataset validation, rider-group train/validation/test split, baseline comparison, model card, and visual evaluation report
 
 ## Architecture
 
@@ -43,6 +47,8 @@ Rider Smartphones (crowdsensing nodes)
         React Native Client (Expo SDK 54, Expo Router)
                     ↓  REST + Socket.io (WebSocket)
         Node.js / Express Backend (Render.com)
+                    ↕
+        Python ML Service (trained delivery-time model)
                     ↓
         Supabase PostgreSQL + PostGIS (Singapore)
         ├── darkstores  (124 geocoded locations, OSM)
@@ -68,6 +74,15 @@ kamai/
 │   │   └── earnings.js          ← POST /earnings, GET /earnings/:riderAnonId
 │   ├── .env                     ← SUPABASE_URL, SUPABASE_ANON_KEY (never commit)
 │   └── package.json
+│
+├── ml/
+│   ├── train.py                 ← Reproducible model comparison and evaluation
+│   ├── serve_model.py           ← /predict and /recommend HTTP service
+│   ├── data/                    ← Dataset card and offline training CSV
+│   ├── artifacts/               ← Trained model and machine-readable metadata
+│   ├── reports/                 ← Evaluation JSON, predictions, and visual report
+│   ├── src/                     ← Features, inference, recommendations, reporting
+│   └── tests/                   ← Feature and recommendation tests
 │
 └── frontend/
     ├── app/
@@ -136,6 +151,21 @@ npx expo start
 # press 'w' for browser, or --tunnel + Expo Go for a phone
 ```
 
+### AIML training and demo
+
+The public India-focused dataset is included for an offline, reproducible university demonstration.
+
+```powershell
+cd kamai/ml
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+.venv\Scripts\python.exe train.py
+.venv\Scripts\python.exe -m unittest discover -s tests -v
+.venv\Scripts\python.exe serve_model.py
+```
+
+Open the repository's root `index.html` and select **Try AI model**. The trained model service runs at `http://127.0.0.1:8000`. The Express backend also proxies it through `/ai/predict` and `/ai/recommend`.
+
 ## Data Sources
 
 Every figure used in Kamai is drawn from a public, citable source — no fabricated numbers.
@@ -151,6 +181,7 @@ Every figure used in Kamai is drawn from a public, citable source — no fabrica
 | Platform partner onboarding pages | Live commission rates, app fees |
 | OpenStreetMap | Darkstore coordinates, geocoding |
 | Karnataka Draft Platform-Based Gig Workers Bill 2024 | Regulatory context |
+| Public India food-delivery operations dataset (Kaggle source, documented mirror) | 38,964 delivery records for supervised delivery-time training |
 
 ## Core Algorithms
 
@@ -159,12 +190,18 @@ Every figure used in Kamai is drawn from a public, citable source — no fabrica
 3. **Earnings Ranking** — ranks platforms by a rider's own effective hourly rate and surfaces a "loyalty penalty"
 4. **Hour-of-Day Personalised Earnings** — replaces static time-slot multipliers with a rider's own historical rate once ≥3 tagged entries exist for a slot
 5. **Spatial k-NN Darkstore Retrieval** — PostGIS GiST-indexed nearest-neighbour query (`<->` operator) bounding the map to a rider's 20 closest stores, evaluated at a 4.46× mean latency reduction over brute-force distance sorting
+6. **Delivery-Time Regression** — compares a median baseline, Ridge regression, Random Forest, and Histogram Gradient Boosting using a delivery-person group split; the selected model predicts delivery duration from traffic, weather, distance, timing, vehicle, and order context
+7. **AI Opportunity Recommendation** — converts predicted duration into expected deliveries/hour and an inspectable net-hourly calculation, then prevents below-wage scenarios from receiving a high recommendation label
 
 ## Evaluation Highlights
 
 - k-NN retrieval matched brute-force top-20 results in 500/500 trials at ~4.46× mean speed-up
 - Controlled Release reduced mean overcrowding ratio from 2.27× (naive broadcast) to 0.45× of actual need across 2,000 Monte Carlo trials, with 0% of trials exceeding 2× need (vs. 46.9% under naive broadcast)
 - Deduction-chain output benchmarked against Fairwork's documented Thiruvananthapuram worker case, producing a transparent, explained gap (fuel-only vs. fuel+food cost basis) rather than a forced match
+- Delivery-time model evaluated on 4,407 held-out records from unseen rider groups: **MAE 3.736 minutes**, **RMSE 4.772 minutes**, **R² 0.742**, and **50.66% lower MAE than the median baseline**
+- Target-derived `delivery_speed` was removed to prevent leakage; rider age was excluded from opportunity ranking
+
+The generated visual report is available at `kamai/ml/reports/model_evaluation.html`; the dataset and model limitations are documented in `kamai/ml/data/DATA_CARD.md` and `kamai/ml/MODEL_CARD.md`.
 
 ## Privacy
 

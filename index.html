@@ -379,6 +379,43 @@
   .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease, transform 0.7s ease;}
   .reveal.in{opacity:1;transform:translateY(0);}
 
+  /* ---------- AIML LAB ---------- */
+  .ai-lab{background:linear-gradient(180deg,var(--surface-2),var(--bg));border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft);}
+  .ai-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+  .ai-metric{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;}
+  .ai-metric b{display:block;font-family:var(--mono);font-size:1.45rem;color:var(--green);margin-bottom:5px;}
+  .ai-metric span{font-size:.76rem;color:var(--text-muted);line-height:1.4;}
+  .ai-panel{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:22px;}
+  .ai-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;}
+  .ai-card h3{font-family:var(--display);font-size:1.25rem;margin-bottom:8px;}
+  .ai-card-intro{color:var(--text-secondary);font-size:.86rem;line-height:1.55;margin-bottom:20px;}
+  .ai-form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  .ai-field label{display:block;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:7px;}
+  .ai-field input,.ai-field select{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px 12px;font-family:var(--body);}
+  .ai-field input:focus,.ai-field select:focus{outline:none;border-color:var(--green);}
+  .ai-submit{width:100%;justify-content:center;margin-top:18px;border-radius:12px;}
+  .ai-status{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);margin-top:12px;min-height:18px;}
+  .ai-status.ok{color:var(--green);}.ai-status.error{color:var(--red);}
+  .ai-result-empty{display:flex;min-height:330px;align-items:center;justify-content:center;text-align:center;color:var(--text-muted);font-size:.88rem;line-height:1.6;padding:30px;}
+  .ai-result{display:none;}.ai-result.show{display:block;}
+  .ai-score-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:20px;}
+  .ai-score{font-family:var(--mono);font-size:2.4rem;color:var(--green);line-height:1;}
+  .ai-score small{font-size:.8rem;color:var(--text-muted);}
+  .ai-label{font-family:var(--mono);font-size:.72rem;background:var(--green-deep);color:var(--green);padding:7px 10px;border-radius:100px;}
+  .ai-result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px;}
+  .ai-output{background:var(--bg);border:1px solid var(--border-soft);border-radius:12px;padding:13px;}
+  .ai-output span{display:block;color:var(--text-muted);font-size:.68rem;margin-bottom:5px;}
+  .ai-output b{font-family:var(--mono);font-size:1rem;}
+  .ai-reasons{border-top:1px solid var(--border);padding-top:15px;}
+  .ai-reasons li{color:var(--text-secondary);font-size:.8rem;line-height:1.45;margin:0 0 8px 17px;}
+  .ai-disclaimer{font-family:var(--mono);font-size:.64rem;color:var(--text-muted);line-height:1.5;margin-top:14px;}
+  .importance{margin-top:24px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+  .importance-item{font-size:.68rem;color:var(--text-muted);}
+  .importance-bar{height:5px;background:var(--border);border-radius:9px;margin-top:7px;overflow:hidden;}
+  .importance-bar i{display:block;height:100%;background:var(--green);border-radius:9px;}
+  @media(max-width:860px){.ai-panel{grid-template-columns:1fr}.ai-metrics{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.ai-form-grid,.ai-result-grid{grid-template-columns:1fr}.importance{grid-template-columns:1fr}.ai-metrics{grid-template-columns:1fr 1fr}}
+
   @media (prefers-reduced-motion: reduce){
     .reveal{opacity:1;transform:none;transition:none;}
     .ledger-row{opacity:1;transform:none;}
@@ -391,6 +428,7 @@
   <div class="logo"><span class="mark">₹</span>KAMAI</div>
   <div class="nav-right">
     <span class="nav-status">in development · Bengaluru pilot</span>
+    <a href="#ai-lab" class="btn-secondary" style="padding:9px 15px;font-size:.78rem;">Try AI model</a>
     <a href="#access" class="nav-cta">Get early access</a>
   </div>
 </nav>
@@ -558,6 +596,73 @@
   </div>
 </section>
 
+<!-- ================= AIML LAB ================= -->
+<section class="ai-lab" id="ai-lab">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Trained model · India delivery data</div>
+      <h2>Test the AI opportunity recommender.</h2>
+      <p>This is a real supervised regression model trained on Indian delivery records—not a hard-coded multiplier. Change the conditions and see how delivery time changes the rider's expected take-home pay.</p>
+    </div>
+
+    <div class="ai-metrics reveal" aria-label="Model evaluation metrics">
+      <div class="ai-metric"><b>30,814</b><span>validated rows used across model development</span></div>
+      <div class="ai-metric"><b>3.74 min</b><span>mean absolute error on an untouched rider-group test set</span></div>
+      <div class="ai-metric"><b>0.742</b><span>test R² score for predicted delivery duration</span></div>
+      <div class="ai-metric"><b>50.66%</b><span>MAE improvement over the median baseline</span></div>
+    </div>
+
+    <div class="ai-panel reveal">
+      <form class="ai-card" id="aiForm">
+        <h3>Delivery conditions</h3>
+        <p class="ai-card-intro">Use a nearby darkstore scenario. Financial assumptions stay visible and editable.</p>
+        <div class="ai-form-grid">
+          <div class="ai-field"><label for="aiDistance">Distance (km)</label><input id="aiDistance" type="number" min="0.1" max="50" step="0.1" value="5.2" required></div>
+          <div class="ai-field"><label for="aiHour">Order hour</label><input id="aiHour" type="number" min="0" max="23" step="1" value="19" required></div>
+          <div class="ai-field"><label for="aiTraffic">Traffic</label><select id="aiTraffic"><option>Low</option><option selected>Medium</option><option>High</option><option>Jam</option></select></div>
+          <div class="ai-field"><label for="aiWeather">Weather</label><select id="aiWeather"><option selected>Sunny</option><option>Cloudy</option><option>Fog</option><option>Stormy</option><option>Windy</option><option>Sandstorms</option></select></div>
+          <div class="ai-field"><label for="aiVehicle">Vehicle</label><select id="aiVehicle"><option selected>motorcycle</option><option>scooter</option><option>electric_scooter</option></select></div>
+          <div class="ai-field"><label for="aiMultiple">Active deliveries</label><input id="aiMultiple" type="number" min="0" max="3" step="1" value="1" required></div>
+          <div class="ai-field"><label for="aiPayout">Gross per order (₹)</label><input id="aiPayout" type="number" min="1" max="500" step="1" value="55" required></div>
+          <div class="ai-field"><label for="aiScarcity">Scarcity score (0–8)</label><input id="aiScarcity" type="number" min="0" max="8" step="1" value="6" required></div>
+        </div>
+        <button class="btn-primary ai-submit" type="submit" id="aiSubmit">Run trained model →</button>
+        <div class="ai-status" id="aiStatus">Checking local model service…</div>
+      </form>
+
+      <div class="ai-card" aria-live="polite">
+        <div class="ai-result-empty" id="aiEmpty">Start the Kamai ML service, then run a scenario to see the prediction and full earnings breakdown.</div>
+        <div class="ai-result" id="aiResult">
+          <div class="ai-score-row">
+            <div><div class="ai-score"><span id="aiScore">—</span><small>/100</small></div><div style="font-size:.72rem;color:var(--text-muted);margin-top:6px;">opportunity score</div></div>
+            <span class="ai-label" id="aiLabel">—</span>
+          </div>
+          <div class="ai-result-grid">
+            <div class="ai-output"><span>Predicted duration</span><b id="aiDuration">—</b></div>
+            <div class="ai-output"><span>Expected deliveries</span><b id="aiDeliveries">—</b></div>
+            <div class="ai-output"><span>Predicted net</span><b id="aiNet">—</b></div>
+            <div class="ai-output"><span>Fair-wage status</span><b id="aiWage">—</b></div>
+            <div class="ai-output"><span>Fuel per hour</span><b id="aiFuel">—</b></div>
+            <div class="ai-output"><span>Model test MAE</span><b id="aiMae">—</b></div>
+            <div class="ai-output"><span>Suggested shift</span><b id="aiBestShift">—</b></div>
+          </div>
+          <ul class="ai-reasons" id="aiReasons"></ul>
+          <p class="ai-disclaimer" id="aiDisclaimer"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="importance reveal" aria-label="Top model feature importance">
+      <div class="importance-item">Weather<div class="importance-bar"><i style="width:100%"></i></div></div>
+      <div class="importance-item">Traffic<div class="importance-bar"><i style="width:95%"></i></div></div>
+      <div class="importance-item">Rider rating<div class="importance-bar"><i style="width:93%"></i></div></div>
+      <div class="importance-item">Distance<div class="importance-bar"><i style="width:76%"></i></div></div>
+      <div class="importance-item">Vehicle condition<div class="importance-bar"><i style="width:45%"></i></div></div>
+    </div>
+    <div class="cite">Evaluation: delivery-person group split (70/15/15). Food-delivery data is used as an operationally adjacent academic baseline and is not claimed to be proprietary quick-commerce data.</div>
+  </div>
+</section>
+
 <!-- ================= ALGORITHMS ================= -->
 <section class="algo-strip">
   <div class="wrap">
@@ -703,6 +808,7 @@ loyaltyPenalty = (bestRate − yourRate) × hrs</div>
           <a href="#map">Scarcity Map</a>
           <a href="#platforms">Platforms</a>
           <a href="#profile">Rider Profile</a>
+          <a href="#ai-lab">AI Model Demo</a>
           <a href="#privacy">Privacy</a>
         </div>
         <div class="footer-col">
@@ -778,6 +884,110 @@ loyaltyPenalty = (bestRate − yourRate) × hrs</div>
 </script>
 
 <script>
+  // AIML opportunity demo — served by the trained Python model at localhost:8000.
+  const aiForm = document.getElementById('aiForm');
+  const aiStatus = document.getElementById('aiStatus');
+  const aiSubmit = document.getElementById('aiSubmit');
+  const aiEmpty = document.getElementById('aiEmpty');
+  const aiResult = document.getElementById('aiResult');
+  const AI_SERVICE = window.KAMAI_AI_SERVICE || 'http://127.0.0.1:8000';
+
+  function setAiStatus(message, state = '') {
+    aiStatus.textContent = message;
+    aiStatus.className = `ai-status ${state}`.trim();
+  }
+
+  async function checkAiService() {
+    try {
+      const response = await fetch(`${AI_SERVICE}/health`);
+      if (!response.ok) throw new Error('offline');
+      const health = await response.json();
+      setAiStatus(`Model online · ${health.model.replaceAll('_', ' ')}`, 'ok');
+    } catch (_) {
+      setAiStatus('Model offline · start kamai/ml/serve_model.py', 'error');
+    }
+  }
+
+  aiForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    aiSubmit.disabled = true;
+    aiSubmit.textContent = 'Predicting…';
+    setAiStatus('Running the trained model…');
+
+    const day = new Date().getDay();
+    const payload = {
+      distance_km: Number(document.getElementById('aiDistance').value),
+      order_hour: Number(document.getElementById('aiHour').value),
+      pickup_delay_minutes: 10,
+      order_weekday: day === 0 ? 6 : day - 1,
+      weather_conditions: document.getElementById('aiWeather').value,
+      road_traffic_density: document.getElementById('aiTraffic').value,
+      vehicle_condition: 1,
+      type_of_order: 'Meal',
+      type_of_vehicle: document.getElementById('aiVehicle').value,
+      multiple_deliveries: Number(document.getElementById('aiMultiple').value),
+      festival: 'No',
+      city_type: 'Metropolitan',
+      rider_rating: 4.7,
+      gross_per_order: Number(document.getElementById('aiPayout').value),
+      commission_pct: 10,
+      tds_pct: 1,
+      scarcity_score: Number(document.getElementById('aiScarcity').value),
+      fuel_price_per_litre: 102,
+      vehicle_mileage_kmpl: 45,
+      minimum_wage_hourly: 90,
+      app_fee_hourly: 2
+    };
+
+    try {
+      const response = await fetch(`${AI_SERVICE}/recommend`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Prediction failed');
+
+      const shiftResponse = await fetch(`${AI_SERVICE}/rank`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          shared: payload,
+          opportunities: [
+            {name: 'Morning · 8–11', order_hour: 9, road_traffic_density: 'Medium', scarcity_score: 3},
+            {name: 'Afternoon · 1–4', order_hour: 14, road_traffic_density: 'Low', scarcity_score: 4},
+            {name: 'Evening · 6–9', order_hour: 19, road_traffic_density: 'High', scarcity_score: 7},
+            {name: 'Late night · 10–12', order_hour: 23, road_traffic_density: 'Low', scarcity_score: 2}
+          ]
+        })
+      });
+      const shiftData = await shiftResponse.json();
+      if (!shiftResponse.ok) throw new Error(shiftData.error || 'Shift ranking failed');
+
+      document.getElementById('aiScore').textContent = data.opportunity_score.toFixed(1);
+      document.getElementById('aiLabel').textContent = data.opportunity_label;
+      document.getElementById('aiDuration').textContent = `${data.predicted_delivery_minutes} min (${data.prediction_interval_minutes[0]}–${data.prediction_interval_minutes[1]})`;
+      document.getElementById('aiDeliveries').textContent = `${data.deliveries_per_hour}/hour`;
+      document.getElementById('aiNet').textContent = `₹${data.net_hourly}/hour`;
+      document.getElementById('aiWage').textContent = data.fair_wage_status;
+      document.getElementById('aiFuel').textContent = `₹${data.deductions.fuel}`;
+      document.getElementById('aiMae').textContent = `${data.model.mae_minutes} min`;
+      document.getElementById('aiBestShift').textContent = shiftData.best.name;
+      document.getElementById('aiReasons').innerHTML = data.reasons.map(reason => `<li>${reason}</li>`).join('');
+      document.getElementById('aiDisclaimer').textContent = `${data.model.name.replaceAll('_', ' ')} · trained on ${data.model.training_rows.toLocaleString('en-IN')} rows. ${data.model.disclaimer}`;
+      aiEmpty.style.display = 'none';
+      aiResult.classList.add('show');
+      setAiStatus('Prediction complete · values are estimates, not guaranteed income', 'ok');
+    } catch (error) {
+      setAiStatus(`${error.message}. Start the local ML service and retry.`, 'error');
+    } finally {
+      aiSubmit.disabled = false;
+      aiSubmit.textContent = 'Run trained model →';
+    }
+  });
+
+  checkAiService();
+
   // Ledger animation — the receipt-style hisaab breakdown in the hero
   const ledgerData = [
     {label:'Gross income', amount:'₹9,850', neg:false},

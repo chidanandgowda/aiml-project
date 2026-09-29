@@ -1,0 +1,11 @@
+# Local environments and generated caches
+kamai/ml/.venv/
+**/__pycache__/
+*.py[cod]
+**/node_modules/
+
+# Local secrets
+kamai/backend/.env
+
+# Generated runtime files
+*.log

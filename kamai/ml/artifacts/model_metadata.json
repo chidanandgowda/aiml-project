@@ -1,0 +1,154 @@
+{
+  "model_version": "1.0.0",
+  "trained_at_utc": "2026-09-29T14:38:04.181497+00:00",
+  "selected_model": "hist_gradient_boosting",
+  "target": "Time_taken (min)",
+  "features": [
+    "distance_km",
+    "order_hour",
+    "pickup_delay_minutes",
+    "order_weekday",
+    "is_weekend",
+    "vehicle_condition",
+    "multiple_deliveries",
+    "rider_rating",
+    "weather_conditions",
+    "road_traffic_density",
+    "type_of_order",
+    "type_of_vehicle",
+    "festival",
+    "city_type"
+  ],
+  "test_metrics": {
+    "mae_minutes": 3.7361,
+    "rmse_minutes": 4.7723,
+    "r2": 0.7424
+  },
+  "baseline_test_metrics": {
+    "mae_minutes": 7.5718,
+    "rmse_minutes": 9.4209,
+    "r2": -0.0041
+  },
+  "mae_improvement_over_baseline_pct": 50.66,
+  "validation_results": {
+    "median_baseline": {
+      "mae_minutes": 7.5128,
+      "rmse_minutes": 9.3482,
+      "r2": -0.0025
+    },
+    "ridge_regression": {
+      "mae_minutes": 5.0629,
+      "rmse_minutes": 6.2941,
+      "r2": 0.5456
+    },
+    "random_forest": {
+      "mae_minutes": 3.8584,
+      "rmse_minutes": 4.9211,
+      "r2": 0.7222
+    },
+    "hist_gradient_boosting": {
+      "mae_minutes": 3.7327,
+      "rmse_minutes": 4.7481,
+      "r2": 0.7414
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "weather_conditions",
+      "importance": 1.614
+    },
+    {
+      "feature": "road_traffic_density",
+      "importance": 1.5301
+    },
+    {
+      "feature": "rider_rating",
+      "importance": 1.5062
+    },
+    {
+      "feature": "distance_km",
+      "importance": 1.2292
+    },
+    {
+      "feature": "vehicle_condition",
+      "importance": 0.7252
+    },
+    {
+      "feature": "multiple_deliveries",
+      "importance": 0.7143
+    },
+    {
+      "feature": "festival",
+      "importance": 0.1761
+    },
+    {
+      "feature": "city_type",
+      "importance": 0.1075
+    },
+    {
+      "feature": "order_hour",
+      "importance": 0.0145
+    },
+    {
+      "feature": "pickup_delay_minutes",
+      "importance": 0.0002
+    },
+    {
+      "feature": "type_of_order",
+      "importance": 0.0002
+    },
+    {
+      "feature": "order_weekday",
+      "importance": -0.0
+    },
+    {
+      "feature": "is_weekend",
+      "importance": 0.0
+    },
+    {
+      "feature": "type_of_vehicle",
+      "importance": -0.002
+    }
+  ],
+  "traffic_error_slices": {
+    "High": {
+      "rows": 439,
+      "mae_minutes": 4.124
+    },
+    "Jam": {
+      "rows": 1459,
+      "mae_minutes": 3.934
+    },
+    "Low": {
+      "rows": 1373,
+      "mae_minutes": 3.655
+    },
+    "Medium": {
+      "rows": 1136,
+      "mae_minutes": 3.43
+    }
+  },
+  "dataset": {
+    "raw_rows": 38964,
+    "training_rows": 30814,
+    "dropped_rows": 8150,
+    "excluded_leakage_columns": [
+      "delivery_speed"
+    ],
+    "excluded_sensitive_columns": [
+      "Delivery_person_Age"
+    ],
+    "feature_count": 14,
+    "source_file": "zomato_cleaned.csv",
+    "train_rows": 21662,
+    "validation_rows": 4745,
+    "test_rows": 4407,
+    "split_strategy": "Group split by delivery-person ID (70/15/15)"
+  },
+  "limitations": [
+    "The public data represents Indian food delivery, not proprietary quick-commerce operations.",
+    "The dataset city field contains city types rather than explicit city names.",
+    "Traffic and weather are categorical snapshots rather than live feeds.",
+    "The prediction interval is a simple MAE-based range, not a calibrated probabilistic interval."
+  ]
+}

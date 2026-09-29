@@ -22,6 +22,7 @@ app.use('/auth', authRoutes)
 app.use('/darkstores', require('./routes/darkstores'))
 app.use('/checkin', require('./routes/checkin'))
 app.use('/earnings', require('./routes/earnings'))
+app.use('/ai', require('./routes/ai'))
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', app: 'kamai-backend', version: '1.0.0' })
@@ -83,7 +84,9 @@ async function broadcastScarcity() {
   }
 }
 
-setInterval(broadcastScarcity, 60 * 1000)
+if (supabase.isConfigured) {
+  setInterval(broadcastScarcity, 60 * 1000)
+}
 
 // ── Auto-expire stale checkins every 5 minutes ──
 async function expireStaleCheckins() {
@@ -98,7 +101,9 @@ async function expireStaleCheckins() {
   else console.log('Stale checkins expired at', new Date().toISOString())
 }
 
-setInterval(expireStaleCheckins, 5 * 60 * 1000)
+if (supabase.isConfigured) {
+  setInterval(expireStaleCheckins, 5 * 60 * 1000)
+}
 
 // ── Start ──
 const PORT = process.env.PORT || 3001
