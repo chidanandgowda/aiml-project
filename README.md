@@ -98,73 +98,119 @@ kamai/
     └── package.json
 ```
 
-## Local Setup
+## Running the Project Locally
 
-### 1. Clone the repository
+The current repository contains a browser-based demonstration in the root
+`index.html`, a Python AI service, and an optional Node.js backend. The quickest
+way to run the project is to start the AI service and the website in two
+separate terminals.
 
-```bash
+### Prerequisites
+
+- Python 3.11 or 3.12
+- Node.js 18 or newer (needed only for the optional backend)
+- A modern web browser
+
+### 1. Clone and enter the repository
+
+```powershell
 git clone <your-repo-url>
 cd kamai
 ```
 
-### 2. Set up Supabase
+All commands below assume that this is the repository root (the directory that
+contains `index.html`, `README.md`, and the inner `kamai` directory).
 
-- Create a project at supabase.com (Southeast Asia / Singapore region)
-- Run the SQL schema (`database/schema.sql`) with PostGIS enabled
-- Copy the Project URL and anon key from Settings → API
-
-### 3. Configure environment
-
-```bash
-cd backend
-cp .env.example .env
-```
-
-Add your `SUPABASE_URL` and `SUPABASE_ANON_KEY` to `.env`.
-
-### 4. Install backend dependencies
-
-```bash
-npm install
-```
-
-### 5. Install frontend dependencies
-
-```bash
-cd ../frontend
-npx expo install
-```
-
-### 6. Run the backend
-
-```bash
-cd backend
-node index.js
-# → http://localhost:3001/health
-```
-
-### 7. Run the frontend
-
-```bash
-cd frontend
-npx expo start
-# press 'w' for browser, or --tunnel + Expo Go for a phone
-```
-
-### AIML training and demo
-
-The public India-focused dataset is included for an offline, reproducible university demonstration.
+### 2. Create the Python environment
 
 ```powershell
-cd kamai/ml
+cd kamai\ml
 python -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
-.venv\Scripts\python.exe train.py
-.venv\Scripts\python.exe -m unittest discover -s tests -v
-.venv\Scripts\python.exe serve_model.py
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Open the repository's root `index.html` and select **Try AI model**. The trained model service runs at `http://127.0.0.1:8000`. The Express backend also proxies it through `/ai/predict` and `/ai/recommend`.
+The dataset and trained model artifact are included in the repository, so you
+do not need to train the model before starting the application.
+
+### 3. Start the AI service
+
+Keep the first PowerShell terminal open and run:
+
+```powershell
+.\.venv\Scripts\python.exe serve_model.py
+```
+
+The service runs at `http://127.0.0.1:8000`. Confirm that it is working by
+opening `http://127.0.0.1:8000/health` in your browser.
+
+### 4. Start the website
+
+Open a second PowerShell terminal, return to the repository root, and run:
+
+```powershell
+cd <path-to-your-cloned-kamai-repository>
+.\kamai\ml\.venv\Scripts\python.exe -m http.server 5500
+```
+
+Open `http://localhost:5500/index.html` in your browser. Scroll to the
+**AI Opportunity Lab**, enter a scenario, and select **Run AI recommendation**.
+
+### 5. Run the automated tests (optional)
+
+From the `kamai\ml` directory:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+### 6. Retrain the model (optional)
+
+The existing trained artifact is ready to use. To reproduce the training and
+evaluation outputs, run this from `kamai\ml`:
+
+```powershell
+.\.venv\Scripts\python.exe train.py
+```
+
+The generated evaluation report is saved to
+`kamai/ml/reports/model_evaluation.html`.
+
+### 7. Start the Node.js backend (optional)
+
+The browser demo communicates directly with the Python service, so the backend
+is not required for the AI demonstration. To run the Express API, open another
+PowerShell terminal and run:
+
+```powershell
+cd <path-to-your-cloned-kamai-repository>\kamai\backend
+npm install
+Copy-Item .env.example .env
+npm start
+```
+
+The backend runs at `http://localhost:3001`. Confirm it is working by opening
+`http://localhost:3001/health`.
+
+The health endpoint and AI proxy work without Supabase. Database-backed
+features such as authentication, check-ins, darkstores, and earnings storage
+require valid `SUPABASE_URL` and `SUPABASE_ANON_KEY` values in
+`kamai/backend/.env`. The backend forwards AI requests to the service configured
+by `ML_SERVICE_URL`, which defaults to `http://127.0.0.1:8000`.
+
+Run the backend test from `kamai\backend` with:
+
+```powershell
+npm test
+```
+
+### Troubleshooting
+
+- If `python` is not recognized, install Python 3.11 or 3.12 and enable the
+  **Add Python to PATH** option during installation.
+- If port `8000`, `5500`, or `3001` is already in use, stop the process using
+  that port before starting Kamai.
+- Keep both the AI-service terminal and website terminal open while using the
+  demonstration.
 
 ## Data Sources
 
